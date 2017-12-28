@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-
-
 use App\User;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Validator;
 
@@ -28,12 +27,16 @@ class RegisterController
         //app(UserRequest::class )->scene('B')->validate($request->all());
         //var_dump(session()->getId());
         //session()->put('fuck', session()->getId());
-       // $user  = User::find(1);
-      //  var_dump(json_encode($user));
+        //$user  = User::find(1);
+       // var_dump($user->getAuthPassword());
+        Auth::loginUsingId($request->input('id'));
+        //var_dump();
     }
 
     public function check()
-    {//var_dump(session()->getId());
-        return session()->get('fuck');
+    {
+        var_dump(Auth::check());
+        //
+       // return session()->get('fuck');
     }
 }

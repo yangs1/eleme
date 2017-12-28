@@ -94,7 +94,8 @@ class Application extends Container{
         'Illuminate\Contracts\Filesystem\Factory'     => 'Illuminate\Filesystem\FilesystemManager',
         'Illuminate\Contracts\Cookie\QueueingFactory' => 'cookie',
         'Illuminate\Contracts\Debug\ExceptionHandler' => 'App\Exceptions\Handler',
-        'Illuminate\Contracts\Translation\Translator' => 'translator'
+        'Illuminate\Contracts\Translation\Translator' => 'translator',
+        'Illuminate\Contracts\Auth\Factory'           => 'auth',
     ];
     /**
      * Create a new Lumen application instance.
@@ -392,7 +393,8 @@ class Application extends Container{
             'Illuminate\Support\Facades\Validator' => 'Validator',
             'Illuminate\Support\Facades\Storage' => 'filesystem',
             'Illuminate\Support\Facades\Hash' => 'hash',
-            'Illuminate\Support\Facades\Cookie' => 'cookie'
+            'Illuminate\Support\Facades\Cookie' => 'cookie',
+            'Illuminate\Support\Facades\Auth' => 'auth'
         ];
 
         if (! static::$aliasesRegistered) {

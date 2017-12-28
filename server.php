@@ -17,10 +17,11 @@
     $app->routeMiddleware([
         "session"   => \Foundation\Session\StartSession::class,
         "cookie"    => \Foundation\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-        "auth"      =>\App\Http\Middleware\AuthMiddleware::class
+        "auth"      => \Foundation\Auth\AuthenticateTerminate::class
     ]);
 
    // $app->register(Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class);
+$app->loadComponent('auth', \Illuminate\Auth\AuthServiceProvider::class);
 
     require __DIR__.'/routes/web.php';
 

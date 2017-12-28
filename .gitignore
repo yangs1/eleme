@@ -2,3 +2,4 @@
 /.idea
 /storage/logs
 /composer.lock
+pid.pid

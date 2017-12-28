@@ -28,6 +28,9 @@
         },
         "files": [
             "foundation/helpers.php"
+        ],
+        "classmap": [
+            "foundation/Auth/GuardHelpers.php"
         ]
     },
     "require-dev": {
