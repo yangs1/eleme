@@ -29,7 +29,8 @@ class RegisterController
         //session()->put('fuck', session()->getId());
         //$user  = User::find(1);
        // var_dump($user->getAuthPassword());
-        Auth::loginUsingId($request->input('id'));
+        //Auth::loginUsingId($request->input('id'));
+        return ['success'=>"10086"];
         //var_dump();
     }
 
