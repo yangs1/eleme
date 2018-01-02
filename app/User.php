@@ -12,6 +12,13 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
+/**
+ * Class User
+ * @package App
+ * @mixin \Illuminate\Database\MySqlConnection|\Illuminate\Database\PostgresConnection
+ * @method \Illuminate\Database\Eloquent\Model|\Illuminate\Database\Eloquent\Collection|null find(mixed  $id, array  $columns = null) static
+ * @method \Illuminate\Database\Eloquent\Builder where($column, $operator = null, $value = null, $boolean = 'and') static
+ */
 class User extends Model implements AuthenticatableContract{
     public $table="users";
 

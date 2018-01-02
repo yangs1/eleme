@@ -25,6 +25,12 @@ trait GuardHelpers
      */
     protected $provider;
 
+
+    /**
+     * 负载
+     */
+    protected $payload;
+
     /**
      * Determine if the current user is authenticated.
      *
@@ -117,5 +123,7 @@ trait GuardHelpers
         $this->user = null;
 
         $this->loggedOut = false;
+
+        $this->payload = [];
     }
 }

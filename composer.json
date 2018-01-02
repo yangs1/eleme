@@ -30,7 +30,8 @@
             "foundation/helpers.php"
         ],
         "classmap": [
-            "foundation/Auth/GuardHelpers.php"
+            "foundation/Auth/GuardHelpers.php",
+            "foundation/Auth/TokenGuard.php"
         ]
     },
     "require-dev": {

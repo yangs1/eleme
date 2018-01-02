@@ -23,7 +23,7 @@
    // $app->register(Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class);
 $app->loadComponent('auth', \Illuminate\Auth\AuthServiceProvider::class);
 
-    require __DIR__.'/routes/web.php';
+    require __DIR__.'/routes/auth.php';
 
 
     if(function_exists('apc_clear_cache')){
