@@ -49,7 +49,7 @@ class TokenGuard implements Guard
     public function __construct(UserProvider $provider, Request $request)
     {
         $this->request = $request;
-        $this->provider = $provider;
+        $this->provider = $provider; // Illuminate\Auth\EloquentUserProvider
         $this->inputKey = 'api_token';
         $this->storageKey = 'remember_token';
     }

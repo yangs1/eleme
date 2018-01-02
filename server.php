@@ -11,7 +11,7 @@
 
     $app->withFacades(true);
 
-    $app->withEloquent();
+    //$app->withEloquent();
 
     //$app->middleware()
     $app->routeMiddleware([
@@ -21,7 +21,7 @@
     ]);
 
    // $app->register(Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class);
-$app->loadComponent('auth', \Illuminate\Auth\AuthServiceProvider::class);
+    $app->loadComponent('auth', \Illuminate\Auth\AuthServiceProvider::class);
 
     require __DIR__.'/routes/auth.php';
 

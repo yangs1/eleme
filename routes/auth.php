@@ -8,7 +8,7 @@
 
 $app->router->group([ 'namespace' => 'App\Http\Controllers\Auth','version'=>"v1"], function () use($app) {
 
-    $app->router->get('/', 'UsersController@login');
+    $app->router->get('/', 'UsersController@register');
 
 });
 
