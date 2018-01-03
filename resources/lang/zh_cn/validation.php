@@ -114,4 +114,5 @@ return [
 
     'attributes' => [],
 
+    'error_message' => '验证失败'
 ];

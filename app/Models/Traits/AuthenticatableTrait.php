@@ -2,27 +2,14 @@
 /**
  * Created by PhpStorm.
  * User: yang
- * Date: 17-8-30
- * Time: 下午2:31
+ * Date: 18-1-3
+ * Time: 下午5:29
  */
 
-namespace App;
+namespace App\Models\Traits;
 
-
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-
-/**
- * Class User
- * @package App
- * @see \Illuminate\Database\MySqlConnection|\Illuminate\Database\PostgresConnection
- * @method self find(mixed  $id, array  $columns = null) static
- * @method \Illuminate\Database\Eloquent\Builder where($column, $operator = null, $value = null, $boolean = 'and') static
- */
-class User extends Model implements AuthenticatableContract{
-
-    public $table="users";
-
+trait AuthenticatableTrait
+{
     /**
      * The column name of the "remember me" token.
      *

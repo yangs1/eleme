@@ -3,15 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\BaseControllers;
-use App\User;
 
-use Illuminate\Auth\RequestGuard;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+
 
 class UsersController extends BaseControllers
 {
@@ -39,17 +36,20 @@ class UsersController extends BaseControllers
 
     public function register(Request $request){
 
-        /*$validator = $this->getValidationFactory()->make($request->all(),[
-            'account' => 'required|users:account',
-            'password' => 'required|max:6'
-        ]);
-        if ($validator->fails()){
-            return $validator->errors()->first();
-        }*/
         $this->validate($request,[
-            'account' => 'required|users:account',
-            'password' => 'required|max:6'
+            'account' => 'required|unique:users,account',
+            'password' => 'required|min:6'
         ]);
+
+        $user = User::create([
+            'account'=>$request->input('account'),
+            'password'=> bcrypt($request->input('password')),
+            'name'=>Str::random(8)
+        ]);
+
+        $token = $user ? Auth::login($user) : '';
+
+        return $this->response( ['token'=>$token], '注册成功',200 );
     }
 
 }

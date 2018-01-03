@@ -131,16 +131,10 @@ if (! function_exists('response')) {
      * @param  array   $headers
      * @return \Illuminate\Http\Response
      */
-   /* function response($content = '', $status = 200, array $headers = [])
+    function response($content = '', $status = 200, array $headers = [])
     {
-        $factory = new Laravel\Lumen\Http\ResponseFactory;
-
-        if (func_num_args() === 0) {
-            return $factory;
-        }
-
-        return $factory->make($content, $status, $headers);
-    }*/
+        return new \Illuminate\Http\Response( $content, $status,  $headers );
+    }
 }
 
 if (! function_exists('event')) {

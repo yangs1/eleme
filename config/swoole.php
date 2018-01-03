@@ -18,7 +18,7 @@ return [
         'task_worker_num' => 0, //异步任务进程
         "task_max_request"=>10,
         'max_request'=>3000,
-        'worker_num'=> 1,
+        'worker_num'=> 4,
         "log_file"=>base_path('storage/swoole.log'),
         'pid_file'=>base_path('pid.pid'),
 

@@ -12,13 +12,13 @@ return [
 
     'app_debug'     =>  true,
     'app_model'     =>  "api", //http, api
-    'locale'        => 'zh_cn', //zh_cn, en
+    'locale'        => 'en', //zh_cn, en
     'fallback_locale'   => 'en',
 
     'log'           =>  'daily',
     'log_max_files' =>  3,
     'log_level'     =>  "debug", //debug , info , notice , warning , error , critical , alert , emergency
-    'log_name'      =>  "yf",
+    'log_name'      =>  "lsf",
     'log_channel'   =>  "LOG",
 
 

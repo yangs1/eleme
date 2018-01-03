@@ -118,4 +118,5 @@ return [
 
     'attributes' => [],
 
+    'error_message' => 'there are some errors',
 ];
