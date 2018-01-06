@@ -36,7 +36,7 @@ class TokenGuard implements Guard
 
 
 
-    protected $fields = ['id', 'name', 'signature', 'avatar', 'gender'];
+    protected $fields = ['id', 'name', 'signature', 'avatar', 'gender','is_store_owner'];
 
 
     /**

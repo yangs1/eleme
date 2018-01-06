@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\BaseControllers;
+use App\Http\Controllers\Controller;
 
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 
-class UsersController extends BaseControllers
+class UsersController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
@@ -51,7 +51,6 @@ class UsersController extends BaseControllers
 
         return $this->response( ['token'=>$token], '注册成功',200 );
     }
-
 }
 
 

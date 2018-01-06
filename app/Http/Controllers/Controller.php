@@ -8,11 +8,11 @@
 
 namespace App\Http\Controllers;
 
-use Foundation\Routing\Controller;
+use Foundation\Routing\Controller as BaseController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class BaseControllers extends Controller
+class Controller extends BaseController
 {
     /**
      * {@inheritdoc}

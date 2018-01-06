@@ -3,6 +3,7 @@
 namespace Foundation\Concerns;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Validation\Factory;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -11,6 +12,11 @@ use Illuminate\Validation\ValidatesWhenResolvedTrait;
 class FromRequests //extends Request
 {
     use ValidatesWhenResolvedTrait;
+
+    /**
+     * @var \Illuminate\Http\Request
+     */
+    protected $request;
 
     protected $scene;
     /**
@@ -47,17 +53,17 @@ class FromRequests //extends Request
 
     /**
      * Validate the class instance.
-     *
+     * @param \Illuminate\Http\Request
      * @return void
      */
-    public function validate( array $data)
+    public function validate( Request $request )
     {
         $this->prepareForValidation();
 
         $rules = $this->scene ?
             array_merge($this->rules(), $this->sceneRules()[$this->scene] ?? []) : $this->rules();
 
-        $instance = $this->getValidatorInstance( $data, $rules );
+        $instance = $this->getValidatorInstance( $request->all(), $rules );
 
         if (! $this->passesAuthorization()) {
             $this->failedAuthorization();
@@ -84,7 +90,8 @@ class FromRequests //extends Request
      */
     protected function formatErrors(Validator $validator)
     {
-        return $validator->getMessageBag()->toArray();
+        return ['code'=>422, 'result'=>$validator->getMessageBag()->toArray(), 'message'=>trans('validation.error_message')];
+        //return $validator->getMessageBag()->toArray();
     }
 
     /**

@@ -6,10 +6,14 @@
  * Time: 下午10:42
  */
 
-$app->router->group([ 'namespace' => 'App\Http\Controllers\Auth','version'=>"v1"], function () use($app) {
+/*$app->router->group([ 'namespace' => 'App\Http\Controllers\Auth','version'=>"v1"], function () use($app) {
 
-    $app->router->get('/', 'UsersController@register');
-
-});
+    //$app->router->get('/', 'UsersController@register');
+});*/
 
 //'domain'=>'fccn.cc','middleware'=>['auth:a','session']  "middleware"=>['auth','session','cookie']
+
+$app->router->group([ 'namespace' => 'App\Http\Controllers\Admin','version'=>"v1"], function () use($app) {
+
+    $app->router->get('/', 'StoreController@create');
+});
