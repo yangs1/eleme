@@ -39,6 +39,15 @@ class StoresController extends Controller
             $user_id
         );
     }
+
+
+    public function lists( Request $request )
+    {
+        $page = $request->input('page',1);
+        $perPage = $request->input('perPage', 10);
+
+        $this->repository->lists( $page, $perPage );
+    }
 }
 
 

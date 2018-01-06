@@ -15,5 +15,5 @@
 
 $app->router->group([ 'namespace' => 'App\Http\Controllers\Admin','version'=>"v1"], function () use($app) {
 
-    $app->router->get('/', 'StoreController@create');
+    $app->router->get('/', 'UsersController@userUnLock');
 });

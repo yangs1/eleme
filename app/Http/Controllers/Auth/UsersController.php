@@ -49,7 +49,7 @@ class UsersController extends Controller
 
         $token = $user ? Auth::login($user) : '';
 
-        return $this->response( ['token'=>$token], '注册成功',200 );
+        return $this->response( '注册成功', ['token'=>$token],200 );
     }
 }
 

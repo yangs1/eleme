@@ -18,4 +18,12 @@ class StoreRepository
 
         User::where('id', $user_id)->update(['is_store_owner'=>1]);
     }
+
+
+    public function lists( $page, $perPage ){
+
+        return Store::orderByDesc('created_at')->forPage( $page, $perPage )
+            ->get(['id','name','address','latitude','longitude','phone',
+                'category_original','category_sub','store_avatar','user_id']);
+    }
 }

@@ -22,7 +22,7 @@ class Controller extends BaseController
         return new JsonResponse(['code'=>422, 'result'=>$errors, 'message'=>trans('validation.error_message')], 422);
     }
 
-    protected function response($data = null, $message = '', $status = 200,  $headers = [], $options = 0){
+    protected function response($message = '', $data = null,  $status = 200,  $headers = [], $options = 0){
         return new JsonResponse([ 'code'=>$status, 'result'=>$data, 'message'=>$message ], 200, $headers, $options);
     }
 }
