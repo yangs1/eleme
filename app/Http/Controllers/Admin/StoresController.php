@@ -48,6 +48,34 @@ class StoresController extends Controller
 
         $this->repository->lists( $page, $perPage );
     }
+
+
+    public function storeLock( Request $request )
+    {
+        $this->validate($request,[
+            'store_id' => 'required',
+        ]);
+
+        Store::where('id', $request->input('store_id'))->update(['status'=>-1]);
+
+        return $this->response('操作成功');
+
+        //var_dump($user->created_at);
+
+        //var_dump( Carbon::createFromFormat('U', time()) );
+        //User::where('id', $request->input('user_id', 0))->update([])
+    }
+
+    public function storeUnLock( Request $request )
+    {
+        $this->validate($request,[
+            'store_id' => 'required',
+        ]);
+
+        Store::where('id', $request->input('store_id'))->update(['status'=>1]);
+
+        return $this->response('操作成功');
+    }
 }
 
 
