@@ -56,7 +56,7 @@ class StoresController extends Controller
             'store_id' => 'required',
         ]);
 
-        Store::where('id', $request->input('store_id'))->update(['status'=>-1]);
+        Store::where('id', $request->input('store_id'))->update(['status'=>-2]);
 
         return $this->response('操作成功');
 

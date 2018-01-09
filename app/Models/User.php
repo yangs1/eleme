@@ -33,4 +33,9 @@ class User extends Model implements AuthenticatableContract{
    // public $dateFormat = 'U';
 
   //  public $dates = [];
+
+    public function store()
+    {
+        return $this->hasOne( Store::class, 'user_id', 'id');
+    }
 }

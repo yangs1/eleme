@@ -4,3 +4,4 @@
 [2018-01-05 16:30:37 *10071.2]	WARNING	swSignalfd_onSignal: signal[1] callback is null.
 [2018-01-05 16:30:37 *10070.1]	WARNING	swSignalfd_onSignal: signal[1] callback is null.
 [2018-01-05 16:30:37 *10069.0]	WARNING	swSignalfd_onSignal: signal[1] callback is null.
+[2018-01-06 10:21:52 #10063.4]	NOTICE	Server is shutdown now.

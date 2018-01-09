@@ -26,4 +26,11 @@ class StoreRepository
             ->get(['id','name','address','latitude','longitude','phone',
                 'category_original','category_sub','store_avatar','user_id']);
     }
+
+    public function update( array $data, $store_id)
+    {
+        return Store::where('id', $store_id )->update($data);
+    }
 }
+
+

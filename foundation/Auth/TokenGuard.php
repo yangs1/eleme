@@ -2,6 +2,7 @@
 
 namespace Illuminate\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\GuardHelpers;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Auth\Guard;
@@ -36,7 +37,7 @@ class TokenGuard implements Guard
 
 
 
-    protected $fields = ['id', 'name', 'signature', 'avatar', 'gender','is_store_owner'];
+    protected $fields = ['id']; //, 'name', 'signature', 'avatar', 'gender','is_store_owner'
 
 
     /**
@@ -44,7 +45,7 @@ class TokenGuard implements Guard
      *
      * @param  \Illuminate\Contracts\Auth\UserProvider  $provider
      * @param  \Illuminate\Http\Request  $request
-     * @return void
+     *
      */
     public function __construct(UserProvider $provider, Request $request)
     {
@@ -57,7 +58,9 @@ class TokenGuard implements Guard
     /**
      * Get the currently authenticated user.
      *
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     * @return \App\Models\User|null
+     *
+     * 初步设想， 用户 跟 店铺，登录 user 以切换角色方式 的方式存在
      */
     public function user()
     {
@@ -82,6 +85,18 @@ class TokenGuard implements Guard
         return $this->user = $user;
     }
 
+
+    public function store()
+    {
+        $user = $this->user();
+
+        if( $user && $user->is_store_owner ){
+
+            return $user->store;
+
+        }
+        return null;
+    }
     /**
      * Get the token for the current request.
      *
@@ -134,17 +149,18 @@ class TokenGuard implements Guard
      * Log a user into the application.
      *
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+     * @param  $guard
      * @return string
      */
-    public function login(AuthenticatableContract $user)
+    public function login(AuthenticatableContract $user, $guard = 'user')
     {
-        $this->forgetCache( "user:".$user->getAuthIdentifier() );
+        $this->forgetCache( "$guard:".$user->getAuthIdentifier() );
 
         $this->cycleRememberToken( $user );
 
         $this->setUser($user);
 
-        return $this->updateCache( $user );
+        return $this->updateCache( $user, $guard );
     }
 
     /**
@@ -160,11 +176,11 @@ class TokenGuard implements Guard
         $this->provider->updateRememberToken($user, $token);
     }
 
-    public function updateCache(AuthenticatableContract $user){
+    public function updateCache(AuthenticatableContract $user, $guard){
 
-        $token = $this->updateJWTToken( $this->JWTHeader(), $this->JWTPayload( $user ), $user->getRememberToken() );
+        $token = $this->updateJWTToken( $this->JWTHeader(), $this->JWTPayload( $user, $guard ), $user->getRememberToken() );
 
-        cache()->put( "user:".$user->getAuthIdentifier(), serialize($user), 60);
+        cache()->put( "$guard:".$user->getAuthIdentifier(), serialize($user), 60);
 
         return $token;
     }
@@ -198,13 +214,14 @@ class TokenGuard implements Guard
         ]));
     }
 
-    protected function JWTPayload( AuthenticatableContract $user){
+    protected function JWTPayload( AuthenticatableContract $user, $guard){
         $payload = array_merge(
             [
                 'aud' => $this->request->ip(), //接收者
                 'sub' => $user->getAuthIdentifier(),
                 'iat' => $_SERVER['REQUEST_TIME'], //什么时候签发的
                 'exp' => $_SERVER['REQUEST_TIME'] + 3600, //过期时间
+                'guard' => $guard
                 //'jti' => encrypt($user->getRememberToken())
             ]
             , $user->only( $this->fields )
@@ -221,10 +238,14 @@ class TokenGuard implements Guard
         }
         $this->payload = json_decode( base64_decode( $jwtArr[1] ), true );
 
-        if (isset( $this->payload['sub'] )){
+        /*
+         * TODO
+         * 进一步处理， 过期时间， 异地登录
+         * */
+        if (isset( $this->payload['sub'], $this->payload['guard'] )){
 
             //$userCache = cache()->get( decrypt($payload['jti']) );
-            $userCache = cache()->get( "user:".$this->payload['sub'] );
+            $userCache = cache()->get( $this->payload['guard'].":".$this->payload['sub'] );
 
             $user = $userCache ? unserialize($userCache) : null;
 

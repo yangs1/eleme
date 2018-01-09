@@ -24,7 +24,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
  */
 class Store extends Model{
 
-    public $table="store";
+    public $table="stores";
 
     public $guarded = [];
 

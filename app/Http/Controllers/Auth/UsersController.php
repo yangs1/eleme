@@ -25,10 +25,8 @@ class UsersController extends Controller
      */
     public function login(Request $request)
     {
- //return Auth::parseJWT("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiIxMjcuMC4wLjEiLCJzdWIiOjEsImlhdCI6MTUxNDg2MzEwMiwiZXhwIjoxNTE0ODY2NzAyLCJpZCI6MSwibmFtZSI6IjExMTExIiwic2lnbmF0dXJlIjoiMzMzMzMiLCJhdmF0YXIiOiIiLCJnZW5kZXIiOiJ1bnNlbGVjdGVkIn0=.NDUxMWJlMzc5YWYxZjcxZjg5Nzk0NzUxNmNhNDllY2ViOWNlNDhkNw==");
-
-      //  var_dump(Auth::login(User::find(1)));
-
+ //return Auth::parseJWT(Auth::login());
+       return Auth::login(User::find(1)->load('store'));
 
         //return unserialize(null);
        // return gettype(User::find(1)->only(['id']));
