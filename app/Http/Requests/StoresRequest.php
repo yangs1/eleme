@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Foundation\Concerns\FromRequests;
 
-class StoreRequest extends FromRequests
+class StoresRequest extends FromRequests
 {
     public function rules()
     {

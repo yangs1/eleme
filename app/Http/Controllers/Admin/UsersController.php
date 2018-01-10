@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 
-use App\Http\Requests\StoreRequest;
+use App\Http\Requests\StoresRequest;
 use App\Models\Store;
 use App\Models\User;
 use App\Repository\StoreRepository;

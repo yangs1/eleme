@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 
-use App\Http\Requests\StoreRequest;
+use App\Http\Requests\StoresRequest;
 use App\Models\Store;
 use App\Models\User;
 use App\Repository\StoreRepository;
@@ -26,7 +26,7 @@ class StoresController extends Controller
 
     public function create( Request $request )
     {
-        app(StoreRequest::class )->scene('create')->validate( $request );
+        app(StoresRequest::class )->scene('create')->validate( $request );
 
         $user_id = $request->input('user_id');
         if ( $store = Store::where('user_id', $user_id)->first() ){
