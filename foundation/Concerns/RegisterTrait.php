@@ -45,6 +45,8 @@ trait RegisterTrait
         $this->singleton(FilesystemManager::class,function (){
             return new FilesystemManager(app());
         });
+        //七牛扩展
+        $this->register(\Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class);
     }
 
     protected function registerEventBindings()

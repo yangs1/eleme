@@ -20,7 +20,7 @@
         "auth"      => \Foundation\Auth\AuthenticateTerminate::class
     ]);
 
-   // $app->register(Overtrue\LaravelFilesystem\Qiniu\QiniuStorageServiceProvider::class);
+
     $app->loadComponent('auth', \Illuminate\Auth\AuthServiceProvider::class);
 
     require __DIR__.'/routes/auth.php';

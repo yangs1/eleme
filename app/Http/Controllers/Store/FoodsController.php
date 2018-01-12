@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Store;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class Goods extends Controller
+class FoodsController extends Controller
 {
     protected $repository;
     /*
