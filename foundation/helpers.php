@@ -177,7 +177,7 @@ if (! function_exists('dispatchMulti')) {
 if (! function_exists('db')) {
 
     /**
-     * @return \Illuminate\Database\MySqlConnection|\Illuminate\Database\PostgresConnection
+     * @return \Illuminate\Database\Query\Builder
      */
     function db(){
        return app("db");
