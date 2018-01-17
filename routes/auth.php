@@ -22,5 +22,5 @@ $app->router->group([ 'namespace' => 'App\Http\Controllers\Admin','version'=>"v1
 $app->router->group([ 'namespace' => 'App\Http\Controllers\Store','version'=>"v1"], function () use($app) {
 
     $app->router->get('/store', 'StoresController@update');
-    $app->router->get('/foods', 'FoodsController@create');
+    $app->router->get('/foods', 'FoodsController@createOrEdit');
 });

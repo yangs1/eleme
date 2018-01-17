@@ -9,7 +9,6 @@
 namespace App\Models;
 
 use App\Models\Traits\AuthenticatableTrait;
-use App\Models\Traits\BatchUpdateTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
@@ -23,17 +22,10 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
  * @method Model create( mixed  $arr ) static
  * @method \Illuminate\Database\Eloquent\Builder  where($column, $operator = null, $value = null, $boolean = 'and') static
  */
-class Foods extends Model{
+class Specs extends Model{
 
-    use BatchUpdateTrait;
-
-    public $table="foods";
+    public $table="specs";
 
     public $guarded = [];
 
-    public function test()
-    {
-        echo '6666';
-
-    }
 }

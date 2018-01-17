@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Foundation\Concerns\FromRequests;
+use Illuminate\Http\Request;
 
 class FoodsRequest extends FromRequests
 {
@@ -43,5 +44,13 @@ class FoodsRequest extends FromRequests
         ];
     }
 
-
+    /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidate( Request $request )
+    {
+        $this->scene = $request->input('food_id' ) ? 'update' : 'create';
+    }
 }

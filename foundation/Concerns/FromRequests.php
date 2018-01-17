@@ -7,12 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Factory;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\ValidatesWhenResolvedTrait;
 
 class FromRequests //extends Request
 {
-    use ValidatesWhenResolvedTrait;
-
+ //   use ValidatesWhenResolvedTrait;
     /**
      * @var \Illuminate\Http\Request
      */
@@ -58,16 +56,19 @@ class FromRequests //extends Request
      */
     public function validate( Request $request )
     {
-        $this->prepareForValidation();
+        $this->prepareForValidate( $request );
 
         $rules = $this->scene ?
             array_merge($this->rules(), $this->sceneRules()[$this->scene] ?? []) : $this->rules();
 
         $instance = $this->getValidatorInstance( $request->all(), $rules );
 
-        if (! $this->passesAuthorization()) {
+        /*if (! $this->passesAuthorization()) {
             $this->failedAuthorization();
         } elseif (! $instance->passes()) {
+            $this->failedValidation($instance);
+        }*/
+        if (! $instance->passes()) {
             $this->failedValidation($instance);
         }
     }
@@ -124,4 +125,8 @@ class FromRequests //extends Request
         return [];
     }
 
+    protected function prepareForValidate( Request $request)
+    {
+
+    }
 }

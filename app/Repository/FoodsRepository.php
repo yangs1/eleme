@@ -8,17 +8,27 @@
 namespace App\Repository;
 
 use App\Models\Foods;
+use App\Models\Specs;
 
 class FoodsRepository
 {
-    public function create( array $data, array $specs)
+    public function save( array $data, array $specs)
     {
-        $food = Foods::create($data);
+        if ( $data['food_id'] ){
+            $food = Foods::where('id', $data['food_id'] )->first();
+            if ( !$food ){
+                return null;
+            }
+            $food->update($data);
 
-        $this->saveSpecs( $specs, $food->id );
+        }else{
+            $food = Foods::create($data);
+        }
+
+        empty($specs) ?: $this->saveSpecs( $specs, $food->id );
+
+        return $food;
     }
-
-
 
     protected function saveSpecs(array $specs, $food_id){
 
@@ -34,9 +44,14 @@ class FoodsRepository
             }
         }
 
-        empty($updateData) ?: Foods::where( 'food_id', $food_id )
-            ->whereIn( 'id', array_keys($updateData) )->delete();
-        empty($updateData) ?: Foods::insert( $insertData );
+        if ( $updateData ){
+            Specs::where( 'food_id', $food_id )
+                ->whereNotIn( 'id', array_keys($updateData) )->delete();
+
+            app( Specs::class )->updateBatch( $updateData, 'id', 'sku_id');
+        }
+
+        empty($insertData) ?: Specs::insert( $insertData );
 
     }
 }
