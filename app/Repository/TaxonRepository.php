@@ -8,6 +8,7 @@
 namespace App\Repository;
 
 use App\Models\Taxon;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class TaxonRepository
@@ -86,7 +87,10 @@ class TaxonRepository
             throw new BadRequestHttpException( 'this node have many child nodes.');
         }
 
-        return Taxon::whereBetween( 'tree_left', [$node->tree_left, $node->tree_right] )->delete();
+        Taxon::whereBetween( 'tree_left', [$node->tree_left, $node->tree_right] )->delete();
+        Taxon::where('tree_left',">", $node->tree_right)->decrement('tree_left',$node->tree_right-$node->tree_left+1);
+        Taxon::where('tree_right',">", $node->tree_right)->decrement('tree_right',$node->tree_right-$node->tree_left+1);
+
     }
 
     /**
@@ -98,6 +102,14 @@ class TaxonRepository
     public function updateNode( $node_id, $params )
     {
         return Taxon::where('id', $node_id )->update( $params );
+    }
+
+    public function getNodes( $level= null, $node_id = null)
+    {
+        $query = (new Taxon())->newQuery();
+        $level && $query->where('tree_level', $level);
+        $node_id && $query->where('id', $node_id);
+        return $query->get();
     }
 
     /*public function initRoot()
