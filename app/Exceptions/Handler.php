@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Contracts\Debug\ExceptionHandler;
@@ -59,7 +60,7 @@ class Handler implements ExceptionHandler
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Exception  $e
-     * @return \Illuminate\Http\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function render($request, Exception $e)
     {
@@ -75,7 +76,10 @@ class Handler implements ExceptionHandler
                 return new Response( $e->errors(), 422);
             }
         }elseif($e instanceof BadRequestHttpException){
-            $e = new NotFoundHttpException($e->getMessage(), $e);
+            if ($request->expectsJson()){
+                return new JsonResponse( [ 'code'=>400, 'result'=>null, 'message'=> $e->getMessage()], 400);
+            }
+            //$e = new NotFoundHttpException($e->getMessage(), $e);
         }
 
         if ($request->expectsJson() || config('app.app_model') === 'api'){

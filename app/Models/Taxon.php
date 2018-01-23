@@ -23,12 +23,11 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
  * @method Model create( mixed  $arr ) static
  * @method \Illuminate\Database\Eloquent\Builder  where($column, $operator = null, $value = null, $boolean = 'and') static
  */
-class Foods extends Model{
+class Taxon extends Model{
 
     use BatchUpdateTrait;
 
-    public $table="foods";
+    public $table="taxon";
 
     public $guarded = [];
-
 }
