@@ -96,7 +96,7 @@ class TaxonRepository
     /**
      * 更新分类
      * @param $node_id
-     * @param $params (only： name, position)
+     * @param $params (only： name, position, description)
      * @return int
      */
     public function updateNode( $node_id, $params )
@@ -108,7 +108,7 @@ class TaxonRepository
     {
         $query = (new Taxon())->newQuery();
         $level && $query->where('tree_level', $level);
-        $node_id && $query->where('id', $node_id);
+        $node_id && $query->where('parent_id', $node_id);
         return $query->get();
     }
 
