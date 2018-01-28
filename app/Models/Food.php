@@ -21,4 +21,9 @@ class Food extends Model{
 
     public $guarded = [];
 
+
+    public function specs()
+    {
+        return $this->hasMany( Spec::class );
+    }
 }

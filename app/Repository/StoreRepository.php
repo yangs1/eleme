@@ -16,7 +16,7 @@ class StoreRepository
     {
         $store = Store::query()->create( $data );
 
-        User::where('id', $user_id)->update(['is_store_owner'=>1]);
+        User::query()->where('id', $user_id)->update(['is_store_owner'=>1]);
 
         return $store;
     }

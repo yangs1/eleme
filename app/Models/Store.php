@@ -8,9 +8,7 @@
 
 namespace App\Models;
 
-use App\Models\Traits\AuthenticatableTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
 class Store extends Model{
 

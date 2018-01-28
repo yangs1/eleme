@@ -66,6 +66,11 @@ class FoodsRepository
     {
         return Food::query()->where( 'store_id', $store_id )->forPage( $page, $perPage)->get();
     }
+
+    public function getFoodInfo( $food_id )
+    {
+        return Food::query()->where('id', $food_id )->with( 'specs' )->first();
+    }
 }
 
 
