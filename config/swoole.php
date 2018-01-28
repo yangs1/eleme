@@ -7,7 +7,6 @@
  */
 
 return [
-
     "listen"=>"0.0.0.0",
     "server_name"=>"",
     "port"=>9501,

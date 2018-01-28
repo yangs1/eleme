@@ -13,7 +13,7 @@ class UsersRepository
 {
     public function lists( $page, $perPage ){
 
-        return User::orderByDesc('created_at')->forPage( $page, $perPage )
+        return User::query()->orderByDesc('created_at')->forPage( $page, $perPage )
             ->get(['name', 'account', 'city', 'gender', 'avatar', 'is_store_owner', 'is_lock']);
     }
 }

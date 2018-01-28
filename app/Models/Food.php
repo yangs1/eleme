@@ -9,12 +9,15 @@
 namespace App\Models;
 
 use App\Models\Traits\AuthenticatableTrait;
+use App\Models\Traits\BatchUpdateTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
-class Store extends Model{
+class Food extends Model{
 
-    public $table="stores";
+    use BatchUpdateTrait;
+
+    public $table="foods";
 
     public $guarded = [];
 

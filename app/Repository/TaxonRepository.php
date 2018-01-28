@@ -8,7 +8,6 @@
 namespace App\Repository;
 
 use App\Models\Taxon;
-use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class TaxonRepository
@@ -51,7 +50,7 @@ class TaxonRepository
      */
     public function addRootNode( $name, $description, $position )
     {
-        $parentNode = Taxon::orderBy('id','desc')->first();
+        $parentNode = Taxon::query()->orderBy('id','desc')->first();
 
         $tree_left = $parentNode ? $parentNode->tree_left + 2 : 1;
         $tree_right = $parentNode ? $parentNode->tree_right + 2 : 2;
@@ -87,10 +86,10 @@ class TaxonRepository
             throw new BadRequestHttpException( 'this node have many child nodes.');
         }
 
-        Taxon::whereBetween( 'tree_left', [$node->tree_left, $node->tree_right] )->delete();
-        Taxon::where('tree_left',">", $node->tree_right)->decrement('tree_left',$node->tree_right-$node->tree_left+1);
-        Taxon::where('tree_right',">", $node->tree_right)->decrement('tree_right',$node->tree_right-$node->tree_left+1);
-
+        Taxon::query()->whereBetween( 'tree_left', [$node->tree_left, $node->tree_right] )->delete();
+        Taxon::query()->where('tree_left',">", $node->tree_right)->decrement('tree_left',$node->tree_right-$node->tree_left+1);
+        Taxon::query()->where('tree_right',">", $node->tree_right)->decrement('tree_right',$node->tree_right-$node->tree_left+1);
+        return true;
     }
 
     /**
@@ -101,16 +100,17 @@ class TaxonRepository
      */
     public function updateNode( $node_id, $params )
     {
-        return Taxon::where('id', $node_id )->update( $params );
+        return Taxon::query()->where('id', $node_id )->update( $params );
     }
 
-    public function getNodes( $level= null, $node_id = null)
+    public function getNodes( $level= null, $parent_id = null)
     {
-        $query = (new Taxon())->newQuery();
+        $query = Taxon::query();
         $level && $query->where('tree_level', $level);
-        $node_id && $query->where('parent_id', $node_id);
+        $parent_id && $query->where('parent_id', $parent_id);
         return $query->get();
     }
+
 
     /*public function initRoot()
     {

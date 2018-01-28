@@ -6,9 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\FoodsRequest;
 use App\Models\Food;
 use App\Repository\FoodsRepository;
+use App\Repository\MenusRepository;
 use Illuminate\Http\Request;
 
-class FoodsController extends Controller
+class MenusController extends Controller
 {
     protected $repository;
     /*
@@ -16,20 +17,15 @@ class FoodsController extends Controller
     | Register Controller
     |--------------------------------------------------------------------------
     */
-    public function __construct( FoodsRepository $repository ){
+    public function __construct( MenusRepository $repository ){
 
         $this->repository = $repository;
 
     }
 
-    public function createOrEdit( Request $request )
+    public function create( Request $request )
     {
-        app( FoodsRequest::class )->validate( $request );
 
-        return $this->repository->save(
-            $request->only(['food_id', 'name', 'description', 'category_id','cover_path']),
-            $request->only(['specs'])
-        );
     }
 }
 

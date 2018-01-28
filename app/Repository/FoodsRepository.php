@@ -7,22 +7,23 @@
  */
 namespace App\Repository;
 
-use App\Models\Foods;
-use App\Models\Specs;
+use App\Models\Food;
+use App\Models\Menu;
+use App\Models\Spec;
 
 class FoodsRepository
 {
     public function save( array $data, array $specs)
     {
-        if ( $data['food_id'] ){
-            $food = Foods::where('id', $data['food_id'] )->first();
+        if ( isset($data['food_id']) ){
+            $food = Food::query()->where('id', $data['food_id'] )->first();
             if ( !$food ){
                 return null;
             }
             $food->update($data);
 
         }else{
-            $food = Foods::create($data);
+            $food = Food::query()->create($data);
         }
 
         empty($specs) ?: $this->saveSpecs( $specs, $food->id );
@@ -45,14 +46,25 @@ class FoodsRepository
         }
 
         if ( $updateData ){
-            Specs::where( 'food_id', $food_id )
+            Spec::where( 'food_id', $food_id )
                 ->whereNotIn( 'id', array_keys($updateData) )->delete();
 
-            app( Specs::class )->updateBatch( $updateData, 'id', 'sku_id');
+            app( Spec::class )->updateBatch( $updateData, 'id', 'sku_id');
         }
 
-        empty($insertData) ?: Specs::insert( $insertData );
+        empty($insertData) ?: Spec::query()->insert( $insertData );
 
+    }
+
+
+    public function getMenusWithFoods( $store_id )
+    {
+        return Menu::query()->where('store_id', $store_id)->with('foods')->get();
+    }
+
+    public function getFoods( $store_id, $page, $perPage )
+    {
+        return Food::query()->where( 'store_id', $store_id )->forPage( $page, $perPage)->get();
     }
 }
 

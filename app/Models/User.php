@@ -18,10 +18,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
  * @see  \Illuminate\Database\MySqlConnection
  * @see  \Illuminate\Database\Connection
  * @see \Illuminate\Database\PostgresConnection
- * @method self find( mixed  $id, array  $columns = null ) static
- * @method self create( mixed  $arr ) static
- * @method \Illuminate\Database\Eloquent\Builder  where($column, $operator = null, $value = null, $boolean = 'and') static
- */
+ * */
 class User extends Model implements AuthenticatableContract{
 
     use AuthenticatableTrait;

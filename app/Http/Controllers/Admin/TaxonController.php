@@ -67,7 +67,7 @@ class TaxonController extends Controller
     {
         $this->repository->getNodes(
             $request->input('level', null),
-            $request->input('node_id'. null)
+            $request->input('parent_id'. null)
         );
     }
 }
