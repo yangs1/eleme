@@ -33,5 +33,5 @@
         opcache_reset();
     }
 
-    //var_dump($app->router);
+    //var_dump($app->router->namedRoutes);
     $app->parse_command();

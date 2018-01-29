@@ -26,8 +26,8 @@ class UsersController extends Controller
      */
     public function login(Request $request)
     {
- //return Auth::parseJWT(Auth::login());
-       return Auth::login(User::find(1)->load('store'));
+ return Auth::parseJWT(Auth::login(User::find(1)));
+       //return Auth::login(User::find(1));
 
         //return unserialize(null);
        // return gettype(User::find(1)->only(['id']));

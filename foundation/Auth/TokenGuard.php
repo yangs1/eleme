@@ -35,7 +35,7 @@ class TokenGuard implements Guard
      */
     protected $storageKey;
 
-
+    protected $ttl = 60;
 
     protected $fields = ['id']; //, 'name', 'signature', 'avatar', 'gender','is_store_owner'
 
@@ -149,18 +149,18 @@ class TokenGuard implements Guard
      * Log a user into the application.
      *
      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
-     * @param  $guard
+     * @param  $single
      * @return string
      */
-    public function login(AuthenticatableContract $user, $guard = 'user')
+    public function login( AuthenticatableContract $user, $single = false )
     {
-        $this->forgetCache( "$guard:".$user->getAuthIdentifier() );
+        //$this->forgetCache( "$guard:".$user->getAuthIdentifier() );
 
-        $this->cycleRememberToken( $user );
+        $single && $this->cycleRememberToken( $user );// 开启即为单端登录
 
         $this->setUser($user);
 
-        return $this->updateCache( $user, $guard );
+        return $this->refreshToken( $user );
     }
 
     /**
@@ -176,11 +176,20 @@ class TokenGuard implements Guard
         $this->provider->updateRememberToken($user, $token);
     }
 
-    public function updateCache(AuthenticatableContract $user, $guard){
+    public function refreshToken(AuthenticatableContract $user){
 
-        $token = $this->updateJWTToken( $this->JWTHeader(), $this->JWTPayload( $user, $guard ), $user->getRememberToken() );
+        $secret = session_create_id();
 
-        cache()->put( "$guard:".$user->getAuthIdentifier(), serialize($user), 60);
+        $token = $this->_getJWTToken( $this->_JWTHeader(), $this->_JWTPayload( $user, $secret ), $user->getRememberToken() );
+
+        //cache()->set('remember_token:'.$user->getRememberToken(), json_encode(['user_id'=>$user->getAuthIdentifier()]), 60*24 );
+        cache()->set('remember_token:'.$secret, $user->getAuthIdentifier(), $this->ttl );
+
+        if ( !cache()->has( "user:".$user->getAuthIdentifier())){
+
+            cache()->put( "user:".$user->getAuthIdentifier(), \swoole_serialize::pack($user), $this->ttl*24 );
+
+        }
 
         return $token;
     }
@@ -195,66 +204,31 @@ class TokenGuard implements Guard
         $this->user()->{$this->storageKey} = $value;
     }*/
 
-    public function updateJWTToken( $header, $payload, $token )
-    {
-       $components = [
-           $header,
-           $payload,
-           base64_encode(hash_hmac("sha1", $header.$payload, $token))
-       ];
-       return implode(".", $components);
-    }
-
-
-
-    protected function JWTHeader(){
-        return base64_encode(json_encode([
-            "alg" => "HS256",
-            "typ" => "JWT"
-        ]));
-    }
-
-    protected function JWTPayload( AuthenticatableContract $user, $guard){
-        $payload = array_merge(
-            [
-                'aud' => $this->request->ip(), //接收者
-                'sub' => $user->getAuthIdentifier(),
-                'iat' => $_SERVER['REQUEST_TIME'], //什么时候签发的
-                'exp' => $_SERVER['REQUEST_TIME'] + 3600, //过期时间
-                'guard' => $guard
-                //'jti' => encrypt($user->getRememberToken())
-            ]
-            , $user->only( $this->fields )
-        );
-        return base64_encode(json_encode($payload));
-    }
-
-
     public function parseJWT( $jwt )
     {
         $jwtArr = explode('.', $jwt);
         if (count($jwtArr) != 3){
             return null;
         }
-        $this->payload = json_decode( base64_decode( $jwtArr[1] ), true );
+        $payload = json_decode( base64_decode( $jwtArr[1] ), true );
 
         /*
          * TODO
          * 进一步处理， 过期时间， 异地登录
          * */
-        if (isset( $this->payload['sub'], $this->payload['guard'] )){
+        if ( isset( $payload['jti'], $payload['exp']) && $payload['exp'] > time() ){
 
             //$userCache = cache()->get( decrypt($payload['jti']) );
-            $userCache = cache()->get( $this->payload['guard'].":".$this->payload['sub'] );
+            $user = $this->_getUserBySecret( $payload['jti'] );
 
-            $user = $userCache ? unserialize($userCache) : null;
-
-            $rememberToken = $user ? $user->getRememberToken() : '-';
            // var_dump($jwtArr[0].$jwtArr[1].$this->user()->getRememberToken());
-            return  hash_equals(
-                base64_decode( $jwtArr[2]),
-                hash_hmac("sha1", $jwtArr[0].$jwtArr[1], $rememberToken)
-            ) ? $user : null;
+            if ($user instanceof AuthenticatableContract){
+                return  hash_equals(
+                    base64_decode( $jwtArr[2]),
+                    hash_hmac("sha1", $jwtArr[0].$jwtArr[1], $user->getRememberToken())
+                ) ? $user : null;
+            }
+
         }
         return null;
     }
@@ -270,5 +244,57 @@ class TokenGuard implements Guard
         $this->request = $request;
 
         return $this;
+    }
+
+
+    private function _getUserBySecret( $secret )
+    {
+        /*$userArr = json_decode( cache()->get( 'remember_token:'.$token ), true);
+
+        $user_id =  is_array($userArr) ? $userArr['user_id'] : null;
+
+        if ($user_id){
+            return cache()->get( "user:".$user_id);
+        }*/
+
+        $remember_token = cache()->get( 'remember_token:'.$secret );
+
+        if ($remember_token){
+            $user_serialize =  cache()->get( "user:".$remember_token );
+
+            if ( $user_serialize ){
+                return \swoole_serialize::unpack( $user_serialize );
+            }
+
+        }
+        return null;
+    }
+
+    private function _getJWTToken( $header, $payload, $token )
+    {
+        $components = [
+            $header,
+            $payload,
+            base64_encode(hash_hmac("sha1", $header.$payload, $token))
+        ];
+        return implode(".", $components);
+    }
+
+    private function _JWTHeader(){
+        return base64_encode(json_encode([
+            "alg" => "HS256",
+            "typ" => "JWT"
+        ]));
+    }
+
+    private function _JWTPayload( AuthenticatableContract $user, $secret){
+        $payload = [
+            //'aud' => , //所面向的用户
+            //'sub' => $user->account, //接收jwt的一方,
+            'iat' => $_SERVER['REQUEST_TIME'], //什么时候签发的
+            'exp' => $_SERVER['REQUEST_TIME'] + 3600, //过期时间
+            'jti' => $secret,// $user->getRememberToken(),//
+        ];
+        return base64_encode(json_encode($payload));
     }
 }
