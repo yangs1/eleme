@@ -37,7 +37,7 @@ class TokenGuard implements Guard
 
     protected $ttl = 60;
 
-    protected $fields = ['id']; //, 'name', 'signature', 'avatar', 'gender','is_store_owner'
+    //protected $fields = ['id']; //, 'name', 'signature', 'avatar', 'gender','is_store_owner'
 
 
     /**
@@ -257,10 +257,10 @@ class TokenGuard implements Guard
             return cache()->get( "user:".$user_id);
         }*/
 
-        $remember_token = cache()->get( 'remember_token:'.$secret );
+        $key = cache()->get( 'remember_token:'.$secret );
 
-        if ($remember_token){
-            $user_serialize =  cache()->get( "user:".$remember_token );
+        if ($key){
+            $user_serialize =  cache()->get( "user:".$key );
 
             if ( $user_serialize ){
                 return \swoole_serialize::unpack( $user_serialize );
