@@ -27,8 +27,9 @@ class FoodsController extends Controller
         app( FoodsRequest::class )->validate( $request );
 
         return $this->repository->save(
-            $request->only(['food_id', 'name', 'description', 'category_id','cover_path']),
-            $request->only(['specs'])
+            $request->only(['name', 'description', 'category_id','cover_path']),
+            $request->only(['specs']),
+            $request->input('food_id', null)
         );
     }
 }

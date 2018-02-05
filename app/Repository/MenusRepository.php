@@ -12,11 +12,11 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class MenusRepository
 {
-    public function save( $store_id, $data )
+    public function save( $store_id, $data, $menu_id = null )
     {
-        if ( isset($data['menu_id']) ){
+        if ( $menu_id ){
 
-            $menu = $this->getMenuById( $data['menu_id'], $store_id);
+            $menu = $this->getMenuById( $menu_id, $store_id);
             $menu->update($data);
 
         }else{

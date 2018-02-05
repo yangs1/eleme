@@ -13,10 +13,10 @@ use App\Models\Spec;
 
 class FoodsRepository
 {
-    public function save( array $data, array $specs)
+    public function save( array $data, array $specs, $food_id = null)
     {
-        if ( isset($data['food_id']) ){
-            $food = Food::query()->where('id', $data['food_id'] )->first();
+        if ( $food_id){
+            $food = Food::query()->where('id', $food_id )->first();
             if ( !$food ){
                 return null;
             }
