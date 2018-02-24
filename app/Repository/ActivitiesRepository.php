@@ -10,6 +10,7 @@ namespace App\Repository;
 
 
 use App\Models\Activity;
+use App\Models\ActivityApply;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class ActivitiesRepository
@@ -41,9 +42,7 @@ class ActivitiesRepository
 
     public function getActivitiesWithFilter( $page, $perPage, $request_filter = 'default', $store_id = null )
     {
-        $query = Activity::query()
-            ->orderBy('time_begin', 'asc')
-            ->orderBy('dateline', 'asc');
+        $query = Activity::query();
 
         switch ( $request_filter ){
             case 'going':
@@ -56,21 +55,47 @@ class ActivitiesRepository
                 $query->where('status', 1)
                     ->where('time_end','<',time());
                 break;
-            case 'store-joined':
-                //todo
-                break;
             default:
                 break;
         }
-        return $query->forPage( $page, $perPage )->get();
+        return $query->orderBy('time_begin', 'asc')
+            ->orderBy('dateline', 'asc')
+            ->forPage( $page, $perPage )->get();
     }
 
-    public function getActivityFilter($request_filter)
+    public function getActivitiesByStoreId( $store_id, $page, $perPage )
     {
-        $filters = ['going', 'finished', 'store-joined', 'default'];
-        if (in_array($request_filter, $filters)) {
-            return $request_filter;
-        }
-        return 'default';
+        return db()->table('activities_apply')
+            ->where('activities_apply.store_id', $store_id)
+            ->where('activities_apply.status', '>=', 1)
+            ->join( 'activities', 'activities_apply.active_id', '=', 'activities.id')
+            ->join( 'taxon', 'taxon.id', '=', 'activities.limit_taxon')
+            ->orderBy('activities.time_begin', 'asc')
+            ->select(['activities.*', 'taxon.name as taxon_name', 'activities_apply.status as apply_status', 'activities_apply.comment'])
+            ->forPage( $page, $perPage )
+            ->get();
+        //id, store_id, active_id, comment, status, created_at
+        //id, title, time_begin, time_end, dateline, status, limit_taxon
     }
+
+
+    public function applyJoin( $activity_id, $sotre_id, $food_id, $price_active, $number_total, $limit_number_user)
+    {
+        $activity =  ActivityApply::query()->where('store_id', $sotre_id)
+            ->where('active_id', $activity_id )->first();
+
+        if ( $activity ){
+            throw new BadRequestHttpException('exit');
+        }
+
+        return ActivityApply::query()->create([
+            'store_id' => $sotre_id,
+            'food_id' => $food_id,
+            'active_id' => $activity_id,
+            'price_active' => $price_active,
+            'number_total' => $number_total,
+            'limit_number_user' => $limit_number_user
+        ]);
+    }
+
 }
